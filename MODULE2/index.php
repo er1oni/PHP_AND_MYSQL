@@ -1,4 +1,5 @@
 <?php
+
   $school = 'Digital School';
   //echo "I love $school";
 
@@ -21,6 +22,17 @@
   $b = 'School';
   $c = $a.$b;
 
-  echo"$c"
+  echo"$c";
+
+  echo strlen(string: $the_string);
+  
+  $programming = 'Preogramming is not cool';
+  echo str_ireplace("not", "very", $programming);
+
+  $another_string = 'Programming';
+
+  echo strrev($another_string)
+
+  //php Variables Scope
 
 ?> 
