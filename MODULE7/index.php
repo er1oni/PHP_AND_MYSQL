@@ -1,21 +1,40 @@
 <?php
-//setting MySQL databasa parameters
+
+// //Setting MySQL database parameters
+// $host = 'localhost';
+// $user = 'root';
+// $pass = '';
+
+// //Connection in datatbase using PDO
+// //Beinning of a try block
+// try{
+//     //Attemt to create a neq PDO object and connecting to a MySQL database
+//     //The connection string is contructed using the variables $host, $user and $pass
+
+//     $conn = new PDO("mysql:host=$host, $user, $pass");
+
+//     //If the connection is succesful
+//     echo "Connected";
+// } catch (Exception $e){
+//     echo "Not Connected";
+// }
 
 $host = 'localhost';
 $user = 'root';
 $pass = '';
 
-//conecting in database using PDO
-//Beinning of a try block
+//Conection in database using PDO
+
 try{
-    //attemt to create s neq PDO object and connecting to a MySQL database
-    //The connecting string is contructed using the variables $host, $user and $pass
+    $conn = new PDO("mysql:host=$host", $user, $pass);
 
-    $conn = new PDO("mysql:host=$host; $user; $pass");
+    $sql = "CREATE DATABASE testtest";
 
-    //if the connection is succesful
-    echo "connected";
-} catch (Exception $e){
-    echo "Not Connected";
-}
-?>
+    $conn -> exec($sql);
+
+    echo "Database is created!";
+}catch (Exception $e){
+    echo "Database not created, something went wrong!";
+} 
+
+?> 
