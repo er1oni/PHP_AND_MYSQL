@@ -2,33 +2,40 @@
 $host = 'localhost';
 $user = 'root';
 $pass = '';
-$db = "testtest";
+$db = "new_db";
 
 try{
     $pdo = new PDO("mysql:host=$host; dbname=$db", $user, $pass);
 
-    // $sql = "CREATE TABLE users (id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    // $sql = "CREATE TABLE IF NOT EXISTS users (id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY, 
     // username VARCHAR(30) NOT NULL,
     // password VARCHAR(30) NOT NULL )";
 
     // $pdo -> exec($sql);
 
-    // echo "table vreated sucesfully!!!";
+    // echo "Table created successfully";
 
-    //Sert values to be inserted
+    // Set the values to be inserted
     $username = "Jack";
 
-    $password = password_hash( "mypassword", PASSWORD_DEFAULT);
+    $password = password_hash("mypassword", PASSWORD_DEFAULT);
 
-    // insert statment for SQL
-    $sql = "INSERT INTO users(username, password) VALUES ('$username', 'password')";
+    //Insert statement for SQL
+    $sql = "INSERT INTO users(username, password) VALUES ('$username', '$password')";
+
+    //Execute the statement using the exec() method od the PDO object
 
     $pdo -> exec($sql);
 
-    echo "New record createtd sucesfully,";
 
-}catch(Exception $e){
-    echo "Error creating table:  ". $e->getMessage();
+    $last_id = $pdo -> lastInsertId();
+
+    echo " New record created successfully. Last inserted ID IS: ". $last_id;
+
+
+}catch(PDOException $e){
+    // echo "Error creating table:  ". $e->getMessage();
+    
+    echo $e -> getMessage();
 }
-
 ?>
