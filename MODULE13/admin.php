@@ -1,21 +1,19 @@
 <?php
 session_start();
-if(isset($_SESSION['admin_logged_in'])){
+if(!isset($_SESSION['admin_logged_in'])){
     header("Location: login.php");
     exit();
 }
 
-//fetch all users from database
+require_once("config.php");
+//Fetch all users from the database
 $sql = "SELECT * FROM users";
-$result = $con->($sql);
+$result = $conn->query($sql);
 
 if(!$result){
-    die("Database query falied: ".conn->error);
-
+    die("Database query failed: ".$conn->error);
 }
-
 ?>
-
 
 <?php require_once("header.php"); ?>
 <!DOCTYPE html>
@@ -114,28 +112,28 @@ if(!$result){
                     </tr>
                 </thead>
                 <tbody>
-                  <?php
-                  if($result->num > 0){
+                <?php
+                //Check if there are any users
+                if($result->num_rows > 0){
                     while($row = $result->fetch_assoc()){
                         echo "<tr>
-                               <td>{$row['id']}</td>
-                               <td>".htmlspecialchars($row['username'])."</td>
-                               <td>".htmlspecialchars($row['email'])."</td>
-                              <td>
-                               <a href = 'edit.php?id={$row['id']}' class = 'btn btn-warning btn-sm'>Edit</a>
-                               <a href = 'delete.php?id={$row['id']}' class = 'btn btn-warning btn-sm'>Edit</a>
-                               </td>
-                               </tr>";
-                                     
-                    }else{
-                        echo "<tr><td colspan = '4' class = 'text-center'> No Users found </td> </tr>";
+                                <td>{$row['id']}</td>
+                                <td>".htmlspecialchars($row['username'])."</td>
+                                <td>".htmlspecialchars($row['email'])."</td>
+                                <td>
+                                <a href = 'edit.php?id={$row['id']}' class = 'btn btn-warning btn-sm'>Edit</a>
+                                <a href = 'delete.php?id={$row['id']}' class = 'btn btn-warning btn-sm'>Delete</a>
+                                </td>
+                              </tr>";
                     }
-                  }
-                  ?>
+                } else{
+                    echo "<tr><td colspan = '4' class = 'text-center'> No users found </td> </tr>";
+                }
+                ?>
                 </tbody>
             </table>
         </div>
     </div>
 </body>
-<?php include("footer.php"); ?>
-</html>
+<?php require_once("footer.php"); ?>
+</html> 

@@ -9,11 +9,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $password = md5($_POST['password']);//Hash the password
 
     // Query to chect admin credentials
-    $sql = "SELECT * FROM admin WHERE username = '$username' AND passsword = '$password' ";
+    $sql = "SELECT * FROM admin WHERE username = '$username' AND password = '$password' ";
     $result= $conn->query($sql);
 
     if ($result->num_rows == 1){
-        $_SESSION['amin_loget_in'] = true;
+        $_SESSION['admin_logged_in'] = true;
         header('Location: admin.php');
         exit();
     }else{
