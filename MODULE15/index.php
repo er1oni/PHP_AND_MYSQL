@@ -174,7 +174,7 @@
             const price = parseFloat(document.getElementById("productPrice").value);
 
             if (id) {
-                // to edit product
+
                 const product = products.find(p => p.id == id);
                 if (product) {
                     product.title = title;
@@ -183,7 +183,7 @@
                     product.price = price;
                 }
             } else {
-                // to add new product
+
                 const newProduct = {
                     id: products.length ? products[products.length - 1].id + 1 : 1,
                     title,
