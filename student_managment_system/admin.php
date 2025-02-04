@@ -1,5 +1,9 @@
 <?php
 
+
+
+include_once("config.php");
+
 //  new student
 if(isset($_POST['add_student'])) {
     $name = $_POST['name'];
