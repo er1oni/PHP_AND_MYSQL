@@ -1,5 +1,4 @@
 <?php
-
 include_once("config.php");
 
 try {
@@ -17,7 +16,6 @@ $pass_count = $conn->query("SELECT COUNT(*) FROM students WHERE status = 'passed
 
 // Fetch failed students count
 $fail_count = $conn->query("SELECT COUNT(*) FROM students WHERE status = 'failed'")->fetchColumn();
-
 ?>
 
 <!DOCTYPE html>
@@ -30,102 +28,65 @@ $fail_count = $conn->query("SELECT COUNT(*) FROM students WHERE status = 'failed
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-        }
-        h2 {
+            background: #f0f2f5;
             text-align: center;
-            margin-top: 50px;
-            font-size: 3rem;
-            letter-spacing: 2px;
+            padding: 40px;
         }
         .dashboard {
             display: flex;
             justify-content: center;
             gap: 30px;
-            margin-top: 50px;
             flex-wrap: wrap;
+            margin-top: 30px;
         }
         .card {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            padding: 30px;
-            width: 250px;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: white;
+            padding: 25px;
+            width: 220px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
             cursor: pointer;
+            text-align: center;
         }
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
         }
         .card h3 {
-            font-size: 1.6rem;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
+            margin: 0;
+            font-size: 20px;
             color: #333;
         }
         .card p {
-            font-size: 3rem;
+            font-size: 28px;
             font-weight: bold;
-            color: #4e73df;
-            margin: 0;
+            color: #555;
+            margin-top: 10px;
         }
-        .card.total {
-            background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
-            color: white;
-        }
-        .card.passed {
-            background: linear-gradient(135deg, #28a745 0%, #3bbd7d 100%);
-            color: white;
-        }
-        .card.failed {
-            background: linear-gradient(135deg, #dc3545 0%, #e93e55 100%);
-            color: white;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        @media (max-width: 768px) {
-            .dashboard {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
+        .total { border-top: 5px solid #007bff; }
+        .passed { border-top: 5px solid #28a745; }
+        .failed { border-top: 5px solid #dc3545; }
     </style>
 </head>
 <body>
 
-<div class="container">
     <h2>Student Management Dashboard</h2>
 
     <div class="dashboard">
-        <!-- Total Students Card -->
-        <div class="card total">
+        <div class="card total" onclick="window.location.href='students_list.php?filter=all'">
             <h3>Total Students</h3>
             <p><?php echo $total_students; ?></p>
         </div>
-
-        <!-- Passed Students Card -->
-        <div class="card passed">
+        <div class="card passed" onclick="window.location.href='students_list.php?filter=passed'">
             <h3>Passed Students</h3>
             <p><?php echo $pass_count; ?></p>
         </div>
-
-        <!-- Failed Students Card -->
-        <div class="card failed">
+        <div class="card failed" onclick="window.location.href='students_list.php?filter=failed'">
             <h3>Failed Students</h3>
             <p><?php echo $fail_count; ?></p>
         </div>
     </div>
-</div>
 
 </body>
 </html>
