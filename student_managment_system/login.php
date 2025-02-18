@@ -1,39 +1,43 @@
 <?php
 session_start();
-include_once("config.php"); // Ensure correct path to your config file
+include_once("config.php"); // Include database configuration
 
 // Check if the user is already logged in
 if (isset($_SESSION['user_id'])) {
+    // If logged in, redirect to dashboard
     header("Location: dashboard.php");
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+$error_message = "";
 
-    // Validate the input (basic)
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+
     if (!empty($username) && !empty($password)) {
         try {
-            // Use the correct credentials from config.php
-            // $conn = new PDO("mysql:host=$servername;dbname=$dbname", $db_username, $db_password);
+            // Establish a new database connection
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
-            $stmt->execute([$username]);
+            // Fetch user details
+            $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username LIMIT 1");
+            $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+            $stmt->execute();
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($user) {
-                if (password_verify($password, $user['password'])) {
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['username'] = $user['username'];
-                    header("Location: dashboard.php");
-                    exit();
-                } else {
-                    $error_message = "Incorrect password!";
-                }
-            } else { 
-                $error_message = "Username not found!";
+            if ($user && password_verify($password, $user['password'])) {
+                // Secure the session
+                session_regenerate_id(true);
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['username'];
+
+                // Redirect to dashboard
+                header("Location: dashboard.php");
+                exit();
+            } else {
+                $error_message = "Invalid username or password!";
             }
         } catch (PDOException $e) {
             $error_message = "Database connection failed: " . $e->getMessage();
@@ -99,6 +103,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             text-align: center;
             margin-top: 10px;
         }
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .register-link a {
+            color: #1e90ff;
+            text-decoration: none;
+        }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -106,8 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="login-container">
         <h2>Login</h2>
 
-        <!-- Display error message if any -->
-        <?php if (isset($error_message)): ?>
+        <?php if (!empty($error_message)): ?>
             <div class="error-message"><?= htmlspecialchars($error_message); ?></div>
         <?php endif; ?>
 
@@ -120,6 +134,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <button type="submit">Login</button>
         </form>
+
+        <div class="register-link">
+            <p>Don't have an account? <a href="register.php">Register here</a></p>
+        </div>
     </div>
 
 </body>

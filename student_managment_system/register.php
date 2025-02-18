@@ -1,6 +1,6 @@
 <?php
 // Include database configuration
-require_once 'config.php'; 
+require_once 'config.php';
 
 // Define variables and initialize with empty values
 $username = $email = $password = $confirm_password = "";
@@ -46,27 +46,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Prepare an insert statement to insert data into the 'users' table
         $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
 
-        if ($stmt = $conn->prepare($sql)) {
-            // Bind variables to the prepared statement
-            $stmt->bindParam(1, $param_username);
-            $stmt->bindParam(2, $param_email);
-            $stmt->bindParam(3, $param_password);
+        try {
+            // Prepare the SQL statement
+            if ($stmt = $conn->prepare($sql)) {
+                // Bind variables to the prepared statement
+                $stmt->bindParam(1, $param_username);
+                $stmt->bindParam(2, $param_email);
+                $stmt->bindParam(3, $param_password);
 
-            // Set parameters
-            $param_username = $username;
-            $param_email = $email;
-            $param_password = password_hash($password, PASSWORD_DEFAULT); // Password hashing
+                // Set parameters
+                $param_username = $username;
+                $param_email = $email;
+                $param_password = password_hash($password, PASSWORD_DEFAULT); // Password hashing
 
-            // Execute the statement
-            if ($stmt->execute()) {
-                // Redirect to login page
-                header("location: login.php");
-            } else {
-                echo "Something went wrong. Please try again later.";
+                // Execute the statement
+                if ($stmt->execute()) {
+                    // Redirect to login page after successful registration
+                    header("location: login.php");
+                    exit();
+                } else {
+                    echo "Something went wrong. Please try again later.";
+                }
+
+                // Close statement
+                $stmt = null;
             }
-
-            // Close statement
-            $stmt = null;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
         }
     }
 
@@ -105,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .form-group {
             margin-bottom: 20px;
         }
-        input[type="text"], input[type="password"] {
+        input[type="text"], input[type="password"], input[type="email"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -160,7 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <span class="help-block"><?php echo $username_err; ?></span>
             </div>    
             <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
-                <input type="text" name="email" placeholder="Email" value="<?php echo $email; ?>" required>
+                <input type="email" name="email" placeholder="Email" value="<?php echo $email; ?>" required>
                 <span class="help-block"><?php echo $email_err; ?></span>
             </div>
             <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">

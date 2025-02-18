@@ -1,7 +1,16 @@
 <?php
+session_start();
+
+// Ensure the user is logged in before accessing the dashboard
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
 include_once("config.php");
 
 try {
+    // Ensure the connection uses the values from the config.php file
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
